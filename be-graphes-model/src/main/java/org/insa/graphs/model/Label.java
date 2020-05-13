@@ -2,10 +2,10 @@ package org.insa.graphs.model;
 
 public class Label implements Comparable<Label> {
 	
-	private Node sommetCourant;
-	private boolean marque;
-	private double cout;
-	private Arc pere;
+	protected Node sommetCourant;
+	protected boolean marque;
+	protected double cout;
+	protected Arc pere;
 	
 	
 	public Label(Node sommetCourant) {
@@ -20,7 +20,7 @@ public class Label implements Comparable<Label> {
 		this.cout = cout;
 		this.pere = pere;
 	}
-	
+
 	public Node getSommet() {
 		return this.sommetCourant;
 	}

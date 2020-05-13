@@ -29,8 +29,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         final int nbNodes = graph.size();
         
         // Index Origine/Destination
-        int index_origine = data.getOrigin().getId();
-        int index_dest = data.getDestination().getId();
+        int indexOrigine = data.getOrigin().getId();
+        int indexDestination = data.getDestination().getId();
         
         // Information pour tracer le chemin
         notifyOriginProcessed(data.getOrigin());
@@ -47,22 +47,24 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         }
         
         // Cour d'origine a zéro
-        labels.get(index_origine).setCost(0);
+        labels.get(indexOrigine).setCost(0);
         
         // On insère le label actualisé dans le tas
-        tas.insert(labels.get(index_origine));
+        tas.insert(labels.get(indexOrigine));
         
         // Nombre d'itérations
         int nbIterations = 0;
         
-        while (!labels.get(index_dest).estMarque() && tas.size() != 0) {
+        
+        // On boucle tant que la destination n'a pas été visitée et qu'il reste des labels dans le tas 
+        while (!labels.get(indexDestination).estMarque() && tas.size() != 0) {
         	// On récupère le label minimal dans le tas
         	Label label_min = tas.deleteMin();
         	// On marque le label minimal
         	labels.get(label_min.getSommet().getId()).marquer();
         	
         	// Debug
-        	System.out.println("Coût du label marqué : " + label_min.getCost());
+        	System.out.println("Coût du label : " + label_min.getCost());
         	System.out.println("Taille du tas : " + tas.size());
         	nbIterations++;
         	
@@ -70,7 +72,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	List<Arc> arcs = label_min.getSommet().getSuccessors();
         	
         	// Debogage
-        	System.out.println("Nb successeurs du label : " + arcs.size());
+        	System.out.println("Nombre de successeurs du label : " + arcs.size());
         	
         	for (int i = 0; i < arcs.size(); i++) {
         		// On vérifie que le chemin est autorisé
@@ -85,7 +87,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         			double oldDistance = labels.get(index_suiv).getCost();
         			double newDistance = label_min.getCost() + data.getCost(arcs.get(i));
         			
-        			// On update le tracé sur la carte
+        			// On update le tracé sur la carte à chaque Node explorée
         			if (Double.isInfinite(oldDistance) && Double.isFinite(newDistance)) {
                         notifyNodeReached(arcs.get(i).getDestination());
                     }
@@ -106,7 +108,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         ShortestPathSolution solution = null;
         
         //La destination n'a pas de prédécesseur, le chemin est infaisable
-        if (!labels.get(index_dest).estMarque()) {
+        if (!labels.get(indexDestination).estMarque()) {
             solution = new ShortestPathSolution(data, Status.INFEASIBLE);
         }
         else {
@@ -116,14 +118,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
             //On crée un nouveau chemin à partir des prédécesseurs
             ArrayList<Arc> chemin = new ArrayList<>();
-            Arc arc = labels.get(index_dest).getPere();
+            Arc arc = labels.get(indexDestination).getPere();
             while (arc != null) {
                 chemin.add(arc);
                 arc = labels.get(arc.getOrigin().getId()).getPere();
             }
             
             System.out.println("Nombre d'itérations : " + nbIterations);
-            System.out.println("Nombre d'arcs dans le plus court chemin : " + chemin.size());
+            System.out.println("Nombre d'arcs : " + chemin.size());
             
             //On inverse ce chemin
             Collections.reverse(chemin);
@@ -133,13 +135,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             
             // Debug
             if (!solution.getPath().isValid()) {
-            	System.out.println("Chemin trouvé non valide.");
+            	System.out.println("Le chemin n'est pas valide !");
             }
             else {
-            	System.out.println("Chemin trouvé valide.");
+            	System.out.println("Solution trouvée !");
             }
-            System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", Dijkstra : " + labels.get(index_dest).getCost());
-            System.out.println("Durée chemin Path : " + solution.getPath().getMinimumTravelTime() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            
+            System.out.println("Durée : " + solution.getPath().getMinimumTravelTime() + "Longueur : " + solution.getPath().getLength() + ", Coût Dijkstra : " + labels.get(indexDestination).getCost());
             
         }
         return solution;
