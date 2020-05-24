@@ -36,37 +36,40 @@ public class Path {
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         
-        double vitesseMin;
-        Arc arc1=null;
+        double fastestArc = 0;
+        Arc arcToAdd = null;
+        
+        // Cas trivial
         if(nodes.size() == 1) {
         	return new Path(graph, nodes.get(0));
         }
         
-        for(int i=0;i<nodes.size()-1;i++) {
+        // On doit parcourir tous les noeuds du chemin donné
+        for(int i = 0; i < nodes.size()-1; i++) {
         	
-        	for(int j=0;j<nodes.get(i).getNumberOfSuccessors();j++) {
+        	// Il faut examiner chaque arc partant du noeud
+        	for(int j = 0; j < nodes.get(i).getNumberOfSuccessors(); j++) {
         		
-        		vitesseMin=nodes.get(i).getSuccessors().get(j).getMinimumTravelTime();
-        		
-        		if(nodes.get(i).getSuccessors().get(j).getDestination()==nodes.get(i+1)) {
+        		if(nodes.get(i).getSuccessors().get(j).getDestination() == nodes.get(i+1)) {
         			
-        			if(nodes.get(i).getSuccessors().get(j).getMinimumTravelTime()<=vitesseMin) {
-        				arc1=nodes.get(i).getSuccessors().get(j);
-        				vitesseMin=nodes.get(i).getSuccessors().get(j).getMinimumTravelTime();
+        			// Ici on considère l'arc dont le parcours est le plus rapide
+        			if(nodes.get(i).getSuccessors().get(j).getMinimumTravelTime() <= fastestArc || arcToAdd == null) {
+        				arcToAdd = nodes.get(i).getSuccessors().get(j);
+        				fastestArc = arcToAdd.getMinimumTravelTime();
         			}
         		}
         		
         	}
-        	if(arc1!=null) {
-        	arcs.add(arc1);
+        	if(arcToAdd != null) {
+        		arcs.add(arcToAdd);
         	}
         	else {
-        		throw new IllegalArgumentException("2 noeuds ne sont pas reliés");
+        		throw new IllegalArgumentException("Path invalide");
         	}
-        }
-        
+        }   
         return new Path(graph, arcs);
     }
+
 
     /**
      * Create a new path that goes through the given list of nodes (in order),
@@ -84,36 +87,38 @@ public class Path {
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
     		throws IllegalArgumentException {
-    	List<Arc> arcs = new ArrayList<Arc>();
-       // float distanceMin;
-        Arc arc1=null;
+        List<Arc> arcs = new ArrayList<Arc>();
+        
+        double shortestArc = 0;
+        Arc arcToAdd = null;
+        
+        // Cas trivial
         if(nodes.size() == 1) {
         	return new Path(graph, nodes.get(0));
         }
         
-        for(int i=0;i<nodes.size()-1;i++) {
+        // On doit parcourir tous les noeuds du chemin donné
+        for(int i = 0; i < nodes.size()-1; i++) {
         	
-        	for(int j=0;j<nodes.get(i).getNumberOfSuccessors();j++) {
+        	// Il faut examiner chaque arc partant du noeud
+        	for(int j = 0; j < nodes.get(i).getNumberOfSuccessors(); j++) {
         		
-        		//distanceMin=nodes.get(i).getSuccessors().get(j).getLength();
-        		
-        		if(nodes.get(i).getSuccessors().get(j).getDestination()==nodes.get(i+1)) {
+        		if(nodes.get(i).getSuccessors().get(j).getDestination() == nodes.get(i+1)) {
         			
-        			if(arc1==null || nodes.get(i).getSuccessors().get(j).getLength()<arc1.getLength()) {
-        				arc1=nodes.get(i).getSuccessors().get(j);
-        				//distanceMin=nodes.get(i).getSuccessors().get(j).getLength();
+        			// Ici on considère l'arc dont le parcours est le plus court
+        			if(nodes.get(i).getSuccessors().get(j).getLength() <= shortestArc || arcToAdd == null) {
+        				arcToAdd = nodes.get(i).getSuccessors().get(j);
+        				shortestArc = arcToAdd.getLength();
         			}
         		}
         	}
-        	if(arc1!=null) {
-        	arcs.add(arc1);
-        	arc1=null;
+        	if(arcToAdd != null) {
+        		arcs.add(arcToAdd);
         	}
         	else {
-        		throw new IllegalArgumentException("2 noeuds ne sont pas reliés");
+        		throw new IllegalArgumentException("Path invalide");
         	}
-        }
-        
+        }   
         return new Path(graph, arcs);
     }
 	

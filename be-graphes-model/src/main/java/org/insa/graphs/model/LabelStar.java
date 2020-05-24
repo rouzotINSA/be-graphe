@@ -14,7 +14,7 @@ public class LabelStar extends Label {
 		this.distanceToDestination = sommetCourant.getPoint().distanceTo(sommetDestination.getPoint());
 	}
 	
-	public void setCost(double cout) {
-		this.cout = cout + this.distanceToDestination; 
+	public double getTotalCost() {
+		return this.cout + this.distanceToDestination;
 	}
 }

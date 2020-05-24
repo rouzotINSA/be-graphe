@@ -45,7 +45,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         	LabelStars.add(new LabelStar(nodes.get(i), data.getDestination(), false, Float.POSITIVE_INFINITY, null));
         }
         
-        // Cour d'origine a zéro
+        // Cout d'origine a zéro
         LabelStars.get(indexOrigine).setCost(0);
         
         // On insère le LabelStar actualisé dans le tas

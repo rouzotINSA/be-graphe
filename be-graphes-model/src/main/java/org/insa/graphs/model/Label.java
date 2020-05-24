@@ -30,7 +30,7 @@ public class Label implements Comparable<Label> {
 	}
 	
 	public int compareTo(Label other) {
-        return Double.compare(getCost(), other.getCost());
+        return Double.compare(getTotalCost(), other.getTotalCost());
     }
 	
 	public double getCost() {
@@ -55,5 +55,9 @@ public class Label implements Comparable<Label> {
 	
 	public Arc getPere() {
 		return this.pere;
+	}
+	
+	public double getTotalCost() {
+		return this.cout;
 	}
 }
